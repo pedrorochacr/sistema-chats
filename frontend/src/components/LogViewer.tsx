@@ -89,7 +89,7 @@ const LogViewer: React.FC = () => {
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-white mb-4">Visualizador de Logs do Sistema</h2>
         <p className="text-gray-400">
-          Visualize e analise todos os logs do sistema com capacidades de filtragem e exportação
+          Visualize e analise todos os logs do sistema
         </p>
       </div>
 
@@ -98,64 +98,20 @@ const LogViewer: React.FC = () => {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-                <input
-                  type="text"
-                  placeholder="Pesquisar logs..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
+              
+
               </div>
-              
-              <select
-                value={filterClient}
-                onChange={(e) => setFilterClient(e.target.value)}
-                className="px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="all">Todos os Clientes</option>
-                <option value="Servidor">Servidor</option>
-                <option value="Alice">Alice</option>
-                <option value="Bob">Bob</option>
-                <option value="Charlie">Charlie</option>
-              </select>
-              
-              <select
-                value={filterType}
-                onChange={(e) => setFilterType(e.target.value)}
-                className="px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="all">Todos os Tipos</option>
-                <option value="connection">Conexões</option>
-                <option value="disconnection">Desconexões</option>
-                <option value="message">Mensagens</option>
-                <option value="info">Info</option>
-                <option value="error">Erros</option>
-              </select>
+
+     
             </div>
             
-            <div className="flex space-x-2">
-              <button
-                onClick={() => exportLogs('txt')}
-                className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
-              >
-                <Download size={16} />
-                <span>Exportar TXT</span>
-              </button>
-              <button
-                onClick={() => exportLogs('csv')}
-                className="flex items-center space-x-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200"
-              >
-                <Download size={16} />
-                <span>Exportar CSV</span>
-              </button>
-            </div>
+
           </div>
         </div>
 
         <div className="p-4">
           <div className="text-sm text-gray-400 mb-4">
-            Mostrando {filteredLogs.length} de {logs.length} entradas de log
+            Mostrando  {logs.length} entradas de log
           </div>
           
           <div className="overflow-x-auto">

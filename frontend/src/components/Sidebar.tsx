@@ -9,12 +9,9 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView }) => {
   const menuItems = [
-    { id: 'dashboard', icon: Server, label: 'Painel Principal' },
     { id: 'server', icon: Server, label: 'Painel do Servidor' },
     { id: 'client', icon: MessageCircle, label: 'Interface do Cliente' },
-    { id: 'terminal', icon: Terminal, label: 'Simulação de Terminal' },
     { id: 'logs', icon: FileText, label: 'Visualizador de Logs' },
-    { id: 'tests', icon: TestTube, label: 'Testes do Sistema' },
   ];
 
   return (

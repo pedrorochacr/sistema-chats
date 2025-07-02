@@ -40,17 +40,7 @@ const ServerPanel: React.FC = () => {
         <h2 className="text-2xl font-bold text-white mb-4">Painel de Controle do Servidor</h2>
         
         <div className="flex items-center space-x-4 mb-6">
-          <button
-            onClick={toggleServer}
-            className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${
-              isServerRunning 
-                ? 'bg-red-600 hover:bg-red-700 text-white' 
-                : 'bg-green-600 hover:bg-green-700 text-white'
-            }`}
-          >
-            {isServerRunning ? <Square size={20} /> : <Play size={20} />}
-            <span>{isServerRunning ? 'Parar Servidor' : 'Iniciar Servidor'}</span>
-          </button>
+
           
           <div className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
             isServerRunning ? 'bg-green-900 text-green-300' : 'bg-gray-800 text-gray-400'
