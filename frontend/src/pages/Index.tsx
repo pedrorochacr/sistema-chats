@@ -9,7 +9,7 @@ import LogViewer from '../components/LogViewer';
 import TestPanel from '../components/TestPanel';
 
 const Index = () => {
-  const [activeView, setActiveView] = useState('dashboard');
+  const [activeView, setActiveView] = useState('client');
 
   const renderActiveView = () => {
     switch (activeView) {

@@ -1,47 +1,66 @@
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Send, Users, Wifi, WifiOff } from 'lucide-react';
+import { set } from 'date-fns';
 
 const ClientInterface: React.FC = () => {
   const [username, setUsername] = useState('');
   const [message, setMessage] = useState('');
   const [isConnected, setIsConnected] = useState(false);
-  const [messages, setMessages] = useState([
-    { time: '14:30:15', user: 'Alice', message: 'Olá pessoal!', color: 'text-blue-400' },
-    { time: '14:30:22', user: 'Bob', message: 'Como vocês estão?', color: 'text-green-400' },
-    { time: '14:30:28', user: 'Charlie', message: 'Ótimo estar aqui!', color: 'text-purple-400' },
-    { time: '14:30:35', user: 'Alice', message: 'Alguém trabalhando em projetos interessantes?', color: 'text-blue-400' },
-    { time: '14:30:42', user: 'Bob', message: 'Estou testando este sistema de chat para minha aula de redes', color: 'text-green-400' },
-  ]);
+  const [messages, setMessages] = useState([]);
+  const [clientCount, setClientCount] = useState(0);
 
+  //   const [messages, setMessages] = useState([
+  //   { time: '14:30:15', user: 'Alice', message: 'Olá pessoal!', color: 'text-blue-400' },
+  //   { time: '14:30:22', user: 'Bob', message: 'Como vocês estão?', color: 'text-green-400' },
+  //   { time: '14:30:28', user: 'Charlie', message: 'Ótimo estar aqui!', color: 'text-purple-400' },
+  //   { time: '14:30:35', user: 'Alice', message: 'Alguém trabalhando em projetos interessantes?', color: 'text-blue-400' },
+  //   { time: '14:30:42', user: 'Bob', message: 'Estou testando este sistema de chat para minha aula de redes', color: 'text-green-400' },
+  // ]);
+  const socketRef = useRef<WebSocket | null>(null);
   const toggleConnection = () => {
-    if (!username.trim() && !isConnected) {
-      alert('Por favor, insira um nome de usuário primeiro');
-      return;
-    }
-    setIsConnected(!isConnected);
-    
-    if (!isConnected) {
-      const newMessage = {
-        time: new Date().toLocaleTimeString(),
-        user: 'Sistema',
-        message: `${username} entrou no chat`,
-        color: 'text-yellow-400'
+    if (isConnected && socketRef.current) {
+      socketRef.current.close();
+      setIsConnected(false);
+    } else {
+      const socket = new WebSocket('ws://localhost:8081'); // ou 8081 se mudou a porta
+      socketRef.current = socket;
+
+      socket.onopen = () => {
+        console.log('Conectado ao WebSocket');
+        socketRef.current.send(username);
+        setIsConnected(true);
       };
-      setMessages(prev => [...prev, newMessage]);
+
+      socket.onmessage = (e) => {
+        console.log('Mensagem recebida:', e.data);
+        // Aqui você pode setar mensagens no estado, etc.
+        const msgObj = JSON.parse(e.data);
+  // msgObj = { time: '14:30:22', user: 'Bob', message: 'Como vocês estão?', color: 'text-green-400' }
+        if(msgObj.type === 'clientCount') {
+          setClientCount(msgObj.count);
+        } else{
+          setMessages(prev => [...prev, msgObj]);
+        }
+  
+      };
+
+      socket.onclose = () => {
+        console.log('Desconectado');
+        setIsConnected(false);
+      };
+
+      socket.onerror = (err) => {
+        console.error('Erro no WebSocket:', err);
+        setIsConnected(false);
+      };
     }
   };
 
   const sendMessage = () => {
     if (!message.trim() || !isConnected) return;
-    
-    const newMessage = {
-      time: new Date().toLocaleTimeString(),
-      user: username,
-      message: message,
-      color: 'text-orange-400'
-    };
-    setMessages(prev => [...prev, newMessage]);
+    socketRef.current.send(message);
+
     setMessage('');
   };
 
@@ -89,7 +108,7 @@ const ClientInterface: React.FC = () => {
         }`}>
           <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-400' : 'bg-gray-500'}`}></div>
           <Users size={16} />
-          <span>{isConnected ? 'Conectado ao servidor (3 usuários online)' : 'Não conectado'}</span>
+          <span>{isConnected ? `Conectado ao servidor (${clientCount} usuários online)` : 'Não conectado'}</span>
         </div>
       </div>
 

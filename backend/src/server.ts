@@ -1,26 +1,21 @@
-import gracefulShutdown from "http-graceful-shutdown";
-import app from "./app";
-import { initIO } from "./libs/socket";
-import { logger } from "./utils/logger";
-import { StartAllWhatsAppsSessions } from "./services/WbotServices/StartAllWhatsAppsSessions";
-import Company from "./models/Company";
-import { startQueueProcess } from "./queues";
-// const server = app.listen(process.env.PORT, '0.0.0.0', async () => {
-// const PORT = Number(process.env.PORT) || 3000;
-// const server = app.listen(PORT, '0.0.0.0', async () => {
- const server = app.listen(process.env.PORT, async () => {
-  const companies = await Company.findAll();
-  const allPromises: any[] = [];
-  companies.map(async c => {
-    const promise = StartAllWhatsAppsSessions(c.id);
-    allPromises.push(promise);
+import "./bootstrap";
+import "./database";
+import { createServer } from 'net';
+import { handleConnection } from "./libs/socket";
+import express from 'express';
+import routes from "./routes";
+const app = express();
+const PORT = 4000;
+const HTTP_PORT = 4001;
+app.use(express.json());
+app.use(routes)
+async function start() {
+  createServer(handleConnection).listen(PORT, () =>
+    console.log(`Servidor TCP rodando na porta ${PORT}`)
+  );
+  app.listen(HTTP_PORT, () => {
+    console.log(`Servidor HTTP rodando em http://localhost:${HTTP_PORT}`);
   });
+}
 
-  Promise.all(allPromises).then(() => {
-    startQueueProcess();
-  });
-  logger.info(`Server started on port: ${process.env.PORT}`);
-});
-
-initIO(server);
-gracefulShutdown(server);
+start().catch(console.error);

@@ -1,26 +1,25 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Search, Download, Filter, Calendar } from 'lucide-react';
-
+import axios from 'axios';
 const LogViewer: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterClient, setFilterClient] = useState('all');
   const [filterType, setFilterType] = useState('all');
+  const[logs, setLogs] = useState([]);
+    useEffect(() => {
+    const fetchLogs = async () => {
+      try {
+        const response = await axios.get("http://localhost:4001/logs");
+        setLogs(response.data);
+      } catch (error) {
+        console.error("Erro ao buscar logs:", error);
+      }
+    };
 
-  const logs = [
-    { id: 1, timestamp: '2024-01-15 14:30:12', client: 'Servidor', type: 'info', message: 'Servidor iniciado na porta 8080' },
-    { id: 2, timestamp: '2024-01-15 14:30:15', client: 'Alice', type: 'connection', message: 'Cliente conectou de 192.168.1.100' },
-    { id: 3, timestamp: '2024-01-15 14:30:22', client: 'Bob', type: 'connection', message: 'Cliente conectou de 192.168.1.101' },
-    { id: 4, timestamp: '2024-01-15 14:30:28', client: 'Charlie', type: 'connection', message: 'Cliente conectou de 192.168.1.102' },
-    { id: 5, timestamp: '2024-01-15 14:31:02', client: 'Alice', type: 'message', message: 'Olá pessoal!' },
-    { id: 6, timestamp: '2024-01-15 14:31:15', client: 'Bob', type: 'message', message: 'Como vocês estão?' },
-    { id: 7, timestamp: '2024-01-15 14:31:28', client: 'Charlie', type: 'message', message: 'Ótimo estar aqui!' },
-    { id: 8, timestamp: '2024-01-15 14:31:35', client: 'Alice', type: 'message', message: 'Alguém trabalhando em projetos interessantes?' },
-    { id: 9, timestamp: '2024-01-15 14:31:42', client: 'Bob', type: 'message', message: 'Estou testando este sistema de chat para minha aula de redes' },
-    { id: 10, timestamp: '2024-01-15 14:32:15', client: 'Servidor', type: 'info', message: 'Mensagem transmitida para 3 clientes' },
-    { id: 11, timestamp: '2024-01-15 14:35:22', client: 'Alice', type: 'disconnection', message: 'Cliente desconectou graciosamente' },
-    { id: 12, timestamp: '2024-01-15 14:35:25', client: 'Servidor', type: 'info', message: 'Thread de conexão terminada para Alice' },
-  ];
+    fetchLogs();
+  }, []);
+
 
   const filteredLogs = logs.filter(log => {
     const matchesSearch = log.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -61,28 +60,7 @@ const LogViewer: React.FC = () => {
     }
   };
 
-  const exportLogs = (format: 'txt' | 'csv') => {
-    let content = '';
-    
-    if (format === 'csv') {
-      content = 'Timestamp,Cliente,Tipo,Mensagem\n';
-      filteredLogs.forEach(log => {
-        content += `"${log.timestamp}","${log.client}","${getTypeLabel(log.type)}","${log.message}"\n`;
-      });
-    } else {
-      filteredLogs.forEach(log => {
-        content += `[${log.timestamp}] ${log.client} (${getTypeLabel(log.type)}): ${log.message}\n`;
-      });
-    }
-    
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `logs_chat.${format}`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+
 
   return (
     <div className="p-8">

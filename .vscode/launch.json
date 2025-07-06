@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Backend TypeScript",
+      "program": "${workspaceFolder}/backend/dist/server.js",         // ou o main do seu backend
+      "outFiles": ["${workspaceFolder}/backend/dist/**/*.js"],
+      "sourceMaps": true,
+      "cwd": "${workspaceFolder}/backend"
+    }
+  ]
+}

@@ -42,12 +42,6 @@ const ServerPanel: React.FC = () => {
         <div className="flex items-center space-x-4 mb-6">
 
           
-          <div className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
-            isServerRunning ? 'bg-green-900 text-green-300' : 'bg-gray-800 text-gray-400'
-          }`}>
-            <div className={`w-2 h-2 rounded-full ${isServerRunning ? 'bg-green-400' : 'bg-gray-500'}`}></div>
-            <span>{isServerRunning ? 'Rodando na Porta 8080' : 'Servidor Offline'}</span>
-          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -59,13 +53,7 @@ const ServerPanel: React.FC = () => {
             <p className="text-2xl font-bold text-blue-400">{connectedClients}</p>
           </div>
           
-          <div className="bg-gray-800 p-4 rounded-lg">
-            <div className="flex items-center space-x-3 mb-2">
-              <Activity className="text-green-400" size={20} />
-              <h3 className="text-white font-semibold">Mensagens Processadas</h3>
-            </div>
-            <p className="text-2xl font-bold text-green-400">47</p>
-          </div>
+
         </div>
       </div>
 

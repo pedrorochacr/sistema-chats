@@ -8,13 +8,7 @@ interface DashboardProps {
 
 const Dashboard: React.FC<DashboardProps> = ({ setActiveView }) => {
   const cards = [
-    {
-      id: 'server',
-      title: 'Iniciar Servidor',
-      description: 'Iniciar servidor TCP e monitorar conexões',
-      icon: Server,
-      color: 'bg-green-600 hover:bg-green-700',
-    },
+
     {
       id: 'client',
       title: 'Iniciar Cliente',
