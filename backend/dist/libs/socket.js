@@ -38,7 +38,9 @@ function handleConnection(socket) {
                 message: `${username} entrou no chat.`,
                 color: 'text-red-400'
             };
-            const ip = socket.remoteAddress || 'IP desconhecido';
+            let ip = socket.remoteAddress || 'IP desconhecido';
+            if (ip === '::1')
+                ip = '127.0.0.1'; // converte IPv6 localhost para IPv4
             const logData = {
                 content: "Novo usuário conectou-se de " + ip + ` com o nome ${username}`,
             };
